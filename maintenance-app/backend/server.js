@@ -1,21 +1,27 @@
-console.log("vhjk");
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-
-console.log("🚀 Initialisation du serveur...");  // Ajout pour voir si le serveur démarre
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import produitRoutes from "./routes/produitRoutes.js"; // ✅ Vérifie ce chemin !
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-console.log("🔗 Tentative de connexion à MongoDB..."); 
+console.log("🚀 Initialisation du serveur...");
 
+// 📌 Routes API
+app.use("/api/produits", produitRoutes);
+
+const PORT = process.env.PORT || 5001;
+
+// 📌 Connexion à MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/maintenance-app")
   .then(() => console.log("✅ MongoDB connecté avec succès"))
-  .catch(err => console.log("❌ Erreur de connexion MongoDB:", err));
+  .catch(err => {
+    console.error("❌ Erreur de connexion MongoDB:", err);
+    process.exit(1);
+  });
 
-console.log("🛠 Configuration des routes...");  
+console.log(`📡 Démarrage du serveur sur le port ${PORT}...`);
 
-app.get("/", (req, res) => {
+app.listen(PORT, () => console.log(`✅ Serveur démarré sur http://localhost:${PORT}`));
