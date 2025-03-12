@@ -1,0 +1,116 @@
+/* 🎨 Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+/* 📌 Body */
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 20px;
+}
+
+
+
+/* 📌 Titre */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 📌 Liens */
+a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+/* 📌 Lien vers le panier */
+.cart-link {
+  display: block;
+  text-align: right;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/* 📌 Liste des produits */
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* 📌 Éléments individuels */
+.product-item {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  width: 260px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-item:hover {
+  transform: scale(1.05);
+}
+
+/* 📌 Bouton d'ajout au panier */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* 📌 Panier */
+.cart {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cart ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart li {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 📌 Formulaire de paiement */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+form button {
+  align-self: center;
+}
