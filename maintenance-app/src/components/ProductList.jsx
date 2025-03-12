@@ -1,4 +1,6 @@
 // 📌 src/components/ProductList.jsx
+import React from "react";
+
 import { useState, useEffect, useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import ProductItem from "./ProductItem";
