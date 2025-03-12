@@ -1,4 +1,7 @@
 // 📌 src/components/ProductItem.jsx
+import React from "react";
+
+
 function ProductItem({ product, addToCart }) {
     return (
       <div style={{ border: "1px solid #ddd", padding: "10px", margin: "10px" }}>
