@@ -1,20 +1,15 @@
 // 📌 src/App.jsx
 import { CartProvider } from "./context/CartContext";
-import ProductList from "./components/ProductList";
-import Cart from "./components/Cart";
-import CheckoutForm from "./components/CheckoutForm";
-import AdminOrders from "./components/AdminOrders";
+import AppRouter from "./Router";
+import "./styles/styles.css";
+
+
+
 
 function App() {
   return (
     <CartProvider>
-      <div>
-        <h1>eCommerce App</h1>
-        <ProductList />
-        <Cart />
-        <CheckoutForm />
-        <AdminOrders />
-      </div>
+      <AppRouter />
     </CartProvider>
   );
 }
