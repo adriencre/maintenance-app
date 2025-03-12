@@ -1,21 +1,37 @@
-console.log("vhjk");
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-
-console.log("🚀 Initialisation du serveur...");  // Ajout pour voir si le serveur démarre
+// backend/server.js
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import produitRoutes from "./routes/produitRoutes.js";
+import personneRoutes from "./routes/personneRoutes.js";
+import panierRoutes from "./routes/panierRoutes.js";
+import commandeRoutes from "./routes/commandeRoutes.js";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-console.log("🔗 Tentative de connexion à MongoDB..."); 
+console.log("🚀 Initialisation du serveur...");
 
-mongoose.connect("mongodb://127.0.0.1:27017/maintenance-app")
+// Enregistrer les routes API
+app.use("/api/personnes", personneRoutes);
+app.use("/api/produits", produitRoutes);
+app.use("/api/paniers", panierRoutes);
+app.use("/api/commandes", commandeRoutes);
+
+const PORT = process.env.PORT || 5001;
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/maintenance-app", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("✅ MongoDB connecté avec succès"))
-  .catch(err => console.log("❌ Erreur de connexion MongoDB:", err));
+  .catch((err) => {
+    console.error("❌ Erreur de connexion MongoDB:", err);
+    process.exit(1);
+  });
 
-console.log("🛠 Configuration des routes...");  
-
-app.get("/", (req, res) => {
+app.listen(PORT, () =>
+  console.log(`✅ Serveur démarré sur http://localhost:${PORT}`)
+);
