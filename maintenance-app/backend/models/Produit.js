@@ -9,6 +9,18 @@ const produitSchema = new mongoose.Schema({
   prix: {
     type: Number,
     required: true,
+  },
+  description: {
+    type: String,
+    default: 'Aucune description disponible'
+  },
+  image: {
+    type: String,
+    default: 'https://via.placeholder.com/150'
+  },
+  stock: {
+    type: Number,
+    default: 0
   }
 });
 
