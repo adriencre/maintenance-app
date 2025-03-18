@@ -30,7 +30,7 @@ function CheckoutForm() {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Paiement</h2>
-      <input
+      <input class="adresse"
         type="text"
         placeholder="Adresse de livraison"
         value={adresse}
