@@ -37,7 +37,7 @@ describe('Home', () => {
     });
 
     renderWithContext(<Home />);
-    expect(screen.getByText('Liste des Produits')).toBeInTheDocument();
+    expect(screen.getByText('BlackMarket')).toBeInTheDocument();
     expect(screen.getByText('🛒 Voir le Panier')).toBeInTheDocument();
   });
 

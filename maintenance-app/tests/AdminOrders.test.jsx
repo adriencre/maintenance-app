@@ -52,7 +52,7 @@ it("affiche un message d'erreur en cas d'échec de récupération", async () => 
   });
 });
 
-// Pour tester l'état de chargement, on force fetch à ne jamais se résoudre
+// Pour ce test, on force fetch à ne jamais se résoudre
 it("affiche un état de chargement", () => {
   fetch.mockImplementationOnce(() => new Promise(() => {}));
   render(<AdminOrders />);
