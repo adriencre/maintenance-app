@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ProductList from '../src/components/ProductList';
+import { BrowserRouter } from 'react-router-dom';
+import Home from '../src/pages/Home';
 import { CartContext } from '../src/context/CartContext';
 
-describe('ProductList', () => {
+describe('Home', () => {
   const mockProducts = [
     { _id: '1', labelle: 'Test Product 1', prix: 10 },
     { _id: '2', labelle: 'Test Product 2', prix: 20 }
@@ -15,7 +16,9 @@ describe('ProductList', () => {
   const renderWithContext = (component) => {
     return render(
       <CartContext.Provider value={{ addToCart: mockAddToCart }}>
-        {component}
+        <BrowserRouter>
+          {component}
+        </BrowserRouter>
       </CartContext.Provider>
     );
   };
@@ -28,22 +31,22 @@ describe('ProductList', () => {
     vi.clearAllMocks();
   });
 
-  it('shows loading state initially', () => {
-    global.fetch.mockImplementationOnce(() =>
-      new Promise(() => {})
-    );
+  it('renders title and cart link', () => {
+    global.fetch.mockResolvedValueOnce({
+      json: () => Promise.resolve([])
+    });
 
-    renderWithContext(<ProductList />);
-    expect(screen.getByText('Chargement...')).toBeInTheDocument();
+    renderWithContext(<Home />);
+    expect(screen.getByText('Liste des Produits')).toBeInTheDocument();
+    expect(screen.getByText('🛒 Voir le Panier')).toBeInTheDocument();
   });
 
   it('displays products after successful fetch', async () => {
     global.fetch.mockResolvedValueOnce({
-      ok: true,
       json: () => Promise.resolve(mockProducts)
     });
 
-    renderWithContext(<ProductList />);
+    renderWithContext(<Home />);
 
     await waitFor(() => {
       expect(screen.getByText('Test Product 1')).toBeInTheDocument();
@@ -51,27 +54,19 @@ describe('ProductList', () => {
     });
   });
 
-  it('shows error message on fetch failure', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500
-    });
+  it('handles fetch error gracefully', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch.mockRejectedValueOnce(new Error('Fetch failed'));
 
-    renderWithContext(<ProductList />);
+    renderWithContext(<Home />);
 
     await waitFor(() => {
-      expect(screen.getByText('Erreur lors de la récupération des produits')).toBeInTheDocument();
-    });
-  });
-
-  it('makes correct fetch call', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockProducts)
+      expect(consoleError).toHaveBeenCalledWith(
+        'Erreur de récupération des produits :',
+        expect.any(Error)
+      );
     });
 
-    renderWithContext(<ProductList />);
-
-    expect(global.fetch).toHaveBeenCalledWith('http://localhost:5001/api/produits');
+    consoleError.mockRestore();
   });
 });

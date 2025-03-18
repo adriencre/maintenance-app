@@ -33,4 +33,3 @@ function ProductItem({ product, addToCart }) {
 }
 
 export default ProductItem;
-  
