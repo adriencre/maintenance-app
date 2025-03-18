@@ -1,5 +1,5 @@
-// 📌 src/components/CheckoutForm.jsx
-import { useState, useContext } from "react";
+// src/components/CheckoutForm.jsx
+import React, { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
 function CheckoutForm() {
@@ -14,7 +14,7 @@ function CheckoutForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        panier_id: "64b9e0f93dcee2c3a9e4c8b1", // ID du panier (à générer dynamiquement si nécessaire)
+        panier_id: "64b9e0f93dcee2c3a9e4c8b1", // À générer dynamiquement si besoin
         produits: cart.map(({ _id, quantity }) => ({ produit_id: _id, quantite: quantity })),
       }),
     });

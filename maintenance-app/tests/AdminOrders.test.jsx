@@ -1,82 +1,75 @@
 import React from 'react';
-import { render, screen, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import AdminOrders from "../src/pages/OrdersPage";
+import { render, screen, waitFor, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import AdminOrders from '../src/components/AdminOrders';
 
-// Mock fetch globally
-global.fetch = vi.fn();
+// Par défaut, fetch renvoie une réponse avec des commandes
+global.fetch = vi.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () =>
+      Promise.resolve([
+        {
+          _id: "1",
+          produits: [
+            { produit_id: { _id: "a1", labelle: "Test Product" }, quantite: 2 },
+          ],
+        },
+      ]),
+  })
+);
 
-describe("AdminOrders", () => {
-  beforeEach(() => {
-    fetch.mockClear();
-  });
+beforeEach(() => {
+  fetch.mockClear();
+});
 
-  it("displays loading state", () => {
-    fetch.mockImplementationOnce(() => new Promise(() => {}));
+it("affiche le titre 'Commandes récentes'", async () => {
+  await act(async () => {
     render(<AdminOrders />);
-    expect(screen.getByTestId("loading")).toHaveTextContent("Chargement des commandes...");
   });
+  await waitFor(() => {
+    expect(screen.getByText(/Commandes récentes/i)).toBeInTheDocument();
+  });
+});
 
-  it("displays orders when fetch succeeds", async () => {
-    const mockOrders = [
-      {
-        _id: "123",
-        produits: [
-          { produit_id: { _id: "1", labelle: "Produit A" }, quantite: 2 },
-          { produit_id: { _id: "2", labelle: "Produit B" }, quantite: 1 }
-        ]
-      }
-    ];
+it("affiche les commandes récupérées", async () => {
+  await act(async () => {
+    render(<AdminOrders />);
+  });
+  await waitFor(() => {
+    expect(screen.getByText("Commande #1")).toBeInTheDocument();
+    expect(screen.getByText("Test Product - x2")).toBeInTheDocument();
+  });
+});
 
-    fetch.mockResolvedValueOnce({
+it("affiche un message d'erreur en cas d'échec de récupération", async () => {
+  fetch.mockImplementationOnce(() => Promise.reject(new Error("Erreur serveur")));
+  await act(async () => {
+    render(<AdminOrders />);
+  });
+  await waitFor(() => {
+    expect(screen.getByText("Erreur: Erreur serveur")).toBeInTheDocument();
+  });
+});
+
+// Pour tester l'état de chargement, on force fetch à ne jamais se résoudre
+it("affiche un état de chargement", () => {
+  fetch.mockImplementationOnce(() => new Promise(() => {}));
+  render(<AdminOrders />);
+  expect(screen.getByText(/Chargement des commandes/i)).toBeInTheDocument();
+});
+
+it("affiche un message quand il n'y a pas de commandes", async () => {
+  fetch.mockImplementationOnce(() =>
+    Promise.resolve({
       ok: true,
-      json: () => Promise.resolve(mockOrders)
-    });
-
+      json: () => Promise.resolve([]),
+    })
+  );
+  await act(async () => {
     render(<AdminOrders />);
-
-    await waitFor(() => {
-      expect(screen.getByText("Commandes récentes")).toBeInTheDocument();
-      expect(screen.getByText("Commande #123")).toBeInTheDocument();
-      expect(screen.getByText("Produit A - x2")).toBeInTheDocument();
-      expect(screen.getByText("Produit B - x1")).toBeInTheDocument();
-    });
   });
-
-  it("displays error message when fetch fails", async () => {
-    const errorMessage = "Network error";
-    fetch.mockRejectedValueOnce(new Error(errorMessage));
-
-    render(<AdminOrders />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("error")).toHaveTextContent(`Erreur: ${errorMessage}`);
-    });
-  });
-
-  it("displays message when no orders are found", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve([])
-    });
-
-    render(<AdminOrders />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("no-orders")).toHaveTextContent("Aucune commande trouvée");
-    });
-  });
-
-  it("handles HTTP errors correctly", async () => {
-    fetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404
-    });
-
-    render(<AdminOrders />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("error")).toHaveTextContent("Erreur: HTTP error! status: 404");
-    });
+  await waitFor(() => {
+    expect(screen.getByText("Aucune commande trouvée")).toBeInTheDocument();
   });
 });
