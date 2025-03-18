@@ -18,7 +18,8 @@ function ProductList() {
 
   return (
     <div>
-      <h2>Liste des Produits</h2>
+      <h1 style={{ color: 'magenta' }}>BlackMarket</h1>
+
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {products.map((product) => (
           <ProductItem key={product._id} product={product} addToCart={addToCart} />

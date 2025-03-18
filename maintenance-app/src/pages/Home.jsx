@@ -17,7 +17,7 @@ function Home() {
 
   return (
     <div className="home-container">
-      <h1>Liste des Produits</h1>
+      <h1 style={{ fontWeight:"bold" }}>BlackMarket</h1>
       <Link to="/panier" className="cart-link">🛒 Voir le Panier</Link>
       <div className="product-list">
         {products.map((product) => (
